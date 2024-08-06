@@ -1,1 +1,29 @@
-[0m[[0m[0mdebug[0m] [0m[0mJar uptodate: /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/iotrt_3-0.1.0-SNAPSHOT.jar[0m
+[0m[[0m[0mdebug[0m] [0m[0mPackaging /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/iotrt_3-0.1.0-SNAPSHOT.jar ...[0m
+[0m[[0m[0mdebug[0m] [0m[0mInput file mappings:[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Order$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Order$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Order.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Order.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Discount$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Discount$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Payment.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Payment.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$$anon$1.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Payment$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Payment$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$Topics$2$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$Topics$2$.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$$anon$2.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package.tasty[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package.tasty[0m
+[0m[[0m[0mdebug[0m] [0m[0m	Main$package$client$2$Discount.class[0m
+[0m[[0m[0mdebug[0m] [0m[0m	  /Users/blakeziegler/Tech/Scala/iot_rtmonitor/iotrt/target/scala-3.4.2/classes/Main$package$client$2$Discount.class[0m
+[0m[[0m[0mdebug[0m] [0m[0mDone packaging.[0m

@@ -14,10 +14,13 @@ import org.apache.kafka.streams.scala.ImplicitConversions._
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.scala.kstream._
 import org.apache.kafka.streams.kstream.GlobalKTable
+import org.apache.kafka.streams.kstream.JoinWindows
+import java.time.temporal.ChronoUnit
+import java.time.Duration
+import org.apache.kafka.streams.StreamsConfig
 
 
-// define data obj
-object data {
+def main(args: Array[String]): Unit = {
   // create client/user profile
   object client {
     type User = String
@@ -29,7 +32,7 @@ object data {
     // client classes: Orders, Payment, Discount
     case class Order(orderid: OrderId, user: User, products: List[Product], amount: BigDecimal)
     case class Payment(orderid: OrderId, status: Status)
-    case class Discount(profile: Profile, amount: Double)
+    case class Discount(profile: Profile, amount: BigDecimal)
     
   }
   // data stream topics
@@ -52,7 +55,7 @@ object data {
 
   // Transform data and build streams w/ Kafka's Serde import
   implicit def serde[A >: Null : Decoder: Encoder]: Serde[A] = {
-    // Raw information -> bytes -> byte array -> string -> decoded string
+    // Raw information -> bytes -> byte array -> byte string -> decoded string
     val sterializer = (a : A) => a.asJson.noSpaces.getBytes()
     val desteralizer = (bytes: Array[Byte]) => {
       val string = new String(bytes)
@@ -89,7 +92,7 @@ object data {
   // bash$ rpk topic create discounts --config "cleanup.policy=compact"
   
   // Kstream transformation
-  // filter, map
+  // filter, map, flatmap
   val expensiveOrders = userOrdersStream.filter { (user, order) =>
     order.amount > 1000
   }
@@ -98,7 +101,49 @@ object data {
     order.products
   }
 
+  val productsStream = userOrdersStream.flatMapValues(_.products)
 
-  def main(args: Array[String]): Unit = {
+  // Join Ktables
+  val ordersWithProfiles = userOrdersStream.join(userprofilesTable) { (order, profile) =>
+    (order, profile)
   }
+  
+  // Join the order profile with the profile specific discount
+  // Key: OderProfile; Value: Discount Amount
+  val discountedOrderStream = ordersWithProfiles.join(discountProfilesGlobal) (
+    { case (user, (order,profile)) => profile },
+    { case ((order, profile), discount) =>
+    // Return new order with applied discount
+      order.copy(amount = order.amount - discount.amount) }   
+  )
+  // Set order and payment streams
+  val orderStream = discountedOrderStream.selectKey((user, order) => order.orderid)
+  val paymentsGlobalTable: GlobalKTable[OrderId, Payment] = builder.globalTable[OrderId, Payment](Payments)
+  // Join Window: Allows for time differences between keys and values
+  // Window length: 30 Seconds
+  val joinWindow = JoinWindows.of(Duration.of(30, ChronoUnit.SECONDS))
+  // Identify only paid orders:
+  val joinOrdersPayments = (order: Order, payment: Payment) =>
+    if (payment.status == "PAID") Option(order) else Option.empty[Order]
+  // Within the paymentStream, identify paid orders and apply the join window
+  val ordersPaid = orderStream.join[OrderId, Payment, Option[Order]](
+    paymentsGlobalTable
+  )(
+    { case (orderId, order) => orderId },
+    joinOrdersPayments
+  ).flatMapValues {
+    case None => List.empty[Order]
+    case Some(order) => List(order)
+  }
+  
+  val topology = builder.build()
+
+  val props = new Properties
+  props.put(StreamsConfig.APPLICATION_ID_CONFIG, "Order-Tracker")
+  props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:8080")
+  props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String.getClass)
+
+  val app = new KafkaStreams(topology, props)
+  app.start()
+
 }

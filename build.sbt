@@ -20,4 +20,3 @@ lazy val root = project
     
 
   )
-
