@@ -13,11 +13,11 @@ import org.apache.kafka.streams.KafkaStreams
 import org.apache.kafka.streams.scala.ImplicitConversions._
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.scala.kstream._
+import org.apache.kafka.streams.kstream.GlobalKTable
 
 
 // define data obj
 object data {
-
   // create client/user profile
   object client {
     type User = String
@@ -27,8 +27,8 @@ object data {
     type Status = String
 
     // client classes: Orders, Payment, Discount
-    case class Order(orderid: OrderId, user: User, products: List[Product], amount: Double)
-    case class Payment(orderid: OrderId, status: Status, amount:BigDecimal)
+    case class Order(orderid: OrderId, user: User, products: List[Product], amount: BigDecimal)
+    case class Payment(orderid: OrderId, status: Status)
     case class Discount(profile: Profile, amount: Double)
     
   }
@@ -67,14 +67,37 @@ object data {
   val builder = new StreamsBuilder()
 
   // Build Kafka Stream
-  //
-  val userOrdersStream: KStream[User, Order] = builder.stream[User, Order](OrdersByUser)
-  val profilesTable: KTable[User, Profile] = builder.table[User, Profile](DiscountProfiles)
+  val userOrdersStream: KStream[User, Order] = 
+    builder.stream[User, Order](OrdersByUser)
+
+  // Build K Table
+  val userprofilesTable: KTable[User, Profile] = 
+    builder.table[User, Profile](DiscountProfiles)
 
   // Repo CLI:
   // docker exec -it redpanda-0 bash
   // bash$ rpk topic delete discount-profiles
   // bash$ rpk topic create discount-profiles --config "cleanup.policy=compact"
+
+  // Global K Table
+  val discountProfilesGlobal: GlobalKTable[Profile, Discount] = 
+    builder.globalTable[Profile, Discount](Discounts)
+
+  // Repo CLI:
+  // docker exec -it redpanda-0 bash
+  // bash$ rpk topic delete discounts
+  // bash$ rpk topic create discounts --config "cleanup.policy=compact"
+  
+  // Kstream transformation
+  // filter, map
+  val expensiveOrders = userOrdersStream.filter { (user, order) =>
+    order.amount > 1000
+  }
+
+  val listOfProducts = userOrdersStream.mapValues { order =>
+    order.products
+  }
+
 
   def main(args: Array[String]): Unit = {
   }
