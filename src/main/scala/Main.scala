@@ -14,7 +14,11 @@ import org.apache.kafka.streams.scala.ImplicitConversions._
 import org.apache.kafka.streams.StreamsBuilder
 import org.apache.kafka.streams.scala.kstream._
 
+
+// define data obj
 object data {
+
+  // create client/user profile
   object client {
     type User = String
     type Profile = String
@@ -22,12 +26,13 @@ object data {
     type OrderId = String
     type Status = String
 
+    // client classes: Orders, Payment, Discount
     case class Order(orderid: OrderId, user: User, products: List[Product], amount: Double)
     case class Payment(orderid: OrderId, status: Status, amount:BigDecimal)
     case class Discount(profile: Profile, amount: Double)
     
   }
-  
+  // data stream topics
   object Topics {
     val OrdersByUser = "orders-by-user"
     val DiscountProfiles = "discount-profiles"
@@ -36,11 +41,18 @@ object data {
     val Payments = "payments"
     val Paid = "paid"
 
+    // Repo CLI:
+    // docker exec -it redpanda-0 bash
+    // bash$ rpk topic create 'topic name'
   }
-
+  
+  // import needed objs
   import client._
   import Topics._
+
+  // Transform data and build streams w/ Kafka's Serde import
   implicit def serde[A >: Null : Decoder: Encoder]: Serde[A] = {
+    // Raw information -> bytes -> byte array -> string -> decoded string
     val sterializer = (a : A) => a.asJson.noSpaces.getBytes()
     val desteralizer = (bytes: Array[Byte]) => {
       val string = new String(bytes)
@@ -51,9 +63,18 @@ object data {
     
   }
 
+  // Define builder to build Kafka Streams
   val builder = new StreamsBuilder()
+
+  // Build Kafka Stream
+  //
   val userOrdersStream: KStream[User, Order] = builder.stream[User, Order](OrdersByUser)
   val profilesTable: KTable[User, Profile] = builder.table[User, Profile](DiscountProfiles)
+
+  // Repo CLI:
+  // docker exec -it redpanda-0 bash
+  // bash$ rpk topic delete discount-profiles
+  // bash$ rpk topic create discount-profiles --config "cleanup.policy=compact"
 
   def main(args: Array[String]): Unit = {
   }
