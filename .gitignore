@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # macOS
 .DS_Store
 
@@ -30,3 +31,10 @@ metals.sbt
 .idea
 .idea_modules
 /.worksheet/
+=======
+*.class
+*.log
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+>>>>>>> 1bd400a78436f0aec8aeb76b4662f28ad5e2fd2c
